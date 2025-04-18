@@ -2,23 +2,8 @@
 
 > **DISCLAIMER:** This framework is a proof‑of‑concept for educational and research use only. The author does not condone or support malicious or unauthorized activities.
 
-> **SECURITY WARNING:**
-> This framework is designed to simulate malware stages for research and education. However, because it is open source, it is possible for someone to modify the code to perform real malicious actions. **Always check the code before running it, especially if you received it from someone else.**
->
-> To verify the code is safe:
-> - Open `src/lib.rs`.
-> - Search for the following function names:
->     - `establish_persistence`
->     - `execute_code`
->     - `communicate_c2`
->     - `perform_anti_analysis`
-> - Inside each function, look for comments like `// Placeholder for ... logic`.
-> - If you see only logging and `Ok(())` or `Ok(true)` being returned, it's safe.
-> - If you see real system calls, file operations, network connections, or anything that changes your system, that's a red flag.
->
-> **Never run code you do not trust or understand.**
 
-A flexible Rust library for building polymorphic malware stage workflows, combining compile‑time and runtime techniques to maximize variability, configurability, and telemetry.
+PMSF is a research and educational Rust framework for simulating the modular stages of malware, with a focus on polymorphism, configurability, and extensibility. It is safe by default, with all real actions stubbed out, and is designed to help researchers and students understand malware staging and evasion techniques in a controlled, observable way.
 
 ---
 
@@ -187,6 +172,24 @@ This example demonstrates config loading, registration, logging, telemetry, and 
 ## Contributing
 
 Issues, pull requests, and suggestions are welcome. Please follow standard Rust project conventions.
+
+---
+
+> **SECURITY WARNING:**
+> This framework is designed to simulate malware stages for research and education. However, because it is open source, it is possible for someone to modify the code to perform real malicious actions. **Always check the code before running it, especially if you received it from someone else.**
+>
+> To verify the code is safe:
+> - Open `src/lib.rs`.
+> - Search for the following function names:
+>     - `establish_persistence`
+>     - `execute_code`
+>     - `communicate_c2`
+>     - `perform_anti_analysis`
+> - Inside each function, look for comments like `// Placeholder`.
+> - If you see only logging and `Ok(())` or `Ok(true)` being returned, it's safe.
+> - If you see real system calls, file operations, network connections, or anything that changes your system, that's a red flag.
+>
+> **Never run code you do not trust or understand.**
 
 ---
 
