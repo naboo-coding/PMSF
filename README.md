@@ -175,6 +175,8 @@ Issues, pull requests, and suggestions are welcome. Please follow standard Rust 
 
 ---
 
+## Warning
+
 > **SECURITY WARNING:**
 > This framework is designed to simulate malware stages for research and education. However, because it is open source, it is possible for someone to modify the code to perform real malicious actions. **Always check the code before running it, especially if you received it from someone else.**
 >
