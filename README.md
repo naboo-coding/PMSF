@@ -1,4 +1,4 @@
-# Polymorphic Malware Stage Framework (PMSFlib)
+# Polymorphic Malware Stage Framework (PMSF)
 
 > **A proof-of-concept Rust library for compile-time polymorphic malware stage selection using [rustmorphism](https://crates.io/crates/rustmorphism).**
 
