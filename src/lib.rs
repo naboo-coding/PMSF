@@ -88,7 +88,7 @@ pub struct RegistryRunKeys;
 impl PersistenceStage for RegistryRunKeys {
     fn establish_persistence(&self, ctx: &StageContext) -> Result<(), FrameworkError> {
         info!("[Persistence] RegistryRunKeys: Attempting to establish persistence");
-        // Placeholder for Registry Run Keys logic
+        // Placeholder
         let result = Ok(());
         match &result {
             Ok(_) => {
@@ -105,6 +105,7 @@ pub struct ScheduledTasks;
 impl PersistenceStage for ScheduledTasks {
     fn establish_persistence(&self, ctx: &StageContext) -> Result<(), FrameworkError> {
         info!("[Persistence] ScheduledTasks: Attempting to establish persistence");
+        // Placeholder
         let result = Ok(());
         match &result {
             Ok(_) => {
@@ -121,6 +122,7 @@ pub struct WMIEventSubscription;
 impl PersistenceStage for WMIEventSubscription {
     fn establish_persistence(&self, ctx: &StageContext) -> Result<(), FrameworkError> {
         info!("[Persistence] WMIEventSubscription: Attempting to establish persistence");
+        // Placeholder
         let result = Ok(());
         match &result {
             Ok(_) => {
@@ -146,6 +148,7 @@ pub struct ClassicProcessInjection;
 impl ExecutionStage for ClassicProcessInjection {
     fn execute_code(&self, ctx: &StageContext) -> Result<Vec<u8>, FrameworkError> {
         info!("[Execution] ClassicProcessInjection: Attempting to execute code");
+        // Placeholder
         let result = Ok(Vec::new());
         match &result {
             Ok(_) => {
@@ -162,6 +165,7 @@ pub struct MappingInjection;
 impl ExecutionStage for MappingInjection {
     fn execute_code(&self, ctx: &StageContext) -> Result<Vec<u8>, FrameworkError> {
         info!("[Execution] MappingInjection: Attempting to execute code");
+        // Placeholder
         let result = Ok(Vec::new());
         match &result {
             Ok(_) => {
@@ -178,6 +182,7 @@ pub struct ThreadHijacking;
 impl ExecutionStage for ThreadHijacking {
     fn execute_code(&self, ctx: &StageContext) -> Result<Vec<u8>, FrameworkError> {
         info!("[Execution] ThreadHijacking: Attempting to execute code");
+        // Placeholder
         let result = Ok(Vec::new());
         match &result {
             Ok(_) => {
@@ -194,6 +199,7 @@ pub struct DirectSyscallExecution;
 impl ExecutionStage for DirectSyscallExecution {
     fn execute_code(&self, ctx: &StageContext) -> Result<Vec<u8>, FrameworkError> {
         info!("[Execution] DirectSyscallExecution: Attempting to execute code");
+        // Placeholder
         let result = Ok(Vec::new());
         match &result {
             Ok(_) => {
@@ -219,7 +225,8 @@ polymorphic_fn! {
 pub struct HTTPSCommunication;
 impl C2Stage for HTTPSCommunication {
     fn communicate_c2(&self, ctx: &StageContext) -> Result<(), FrameworkError> {
-        info!("[C2] HTTPSCommunication: Attempting C2 communication");
+        info!("[C2] HTTPSCommunication: Attempting to communicate");
+        // Placeholder
         let result = Ok(());
         match &result {
             Ok(_) => {
@@ -235,7 +242,8 @@ impl C2Stage for HTTPSCommunication {
 pub struct DNSTunneling;
 impl C2Stage for DNSTunneling {
     fn communicate_c2(&self, ctx: &StageContext) -> Result<(), FrameworkError> {
-        info!("[C2] DNSTunneling: Attempting C2 communication");
+        info!("[C2] DNSTunneling: Attempting to communicate");
+        // Placeholder
         let result = Ok(());
         match &result {
             Ok(_) => {
@@ -251,7 +259,8 @@ impl C2Stage for DNSTunneling {
 pub struct ICMPCommunication;
 impl C2Stage for ICMPCommunication {
     fn communicate_c2(&self, ctx: &StageContext) -> Result<(), FrameworkError> {
-        info!("[C2] ICMPCommunication: Attempting C2 communication");
+        info!("[C2] ICMPCommunication: Attempting to communicate");
+        // Placeholder
         let result = Ok(());
         match &result {
             Ok(_) => {
@@ -267,7 +276,8 @@ impl C2Stage for ICMPCommunication {
 pub struct RawSocketsCommunication;
 impl C2Stage for RawSocketsCommunication {
     fn communicate_c2(&self, ctx: &StageContext) -> Result<(), FrameworkError> {
-        info!("[C2] RawSocketsCommunication: Attempting C2 communication");
+        info!("[C2] RawSocketsCommunication: Attempting to communicate");
+        // Placeholder
         let result = Ok(());
         match &result {
             Ok(_) => {
@@ -293,7 +303,8 @@ polymorphic_fn! {
 pub struct AntiDebugging;
 impl AntiAnalysisStage for AntiDebugging {
     fn perform_anti_analysis(&self, ctx: &StageContext) -> Result<bool, FrameworkError> {
-        info!("[AntiAnalysis] AntiDebugging: Performing anti-analysis");
+        info!("[AntiAnalysis] AntiDebugging: Attempting anti-debugging");
+        // Placeholder
         let result = Ok(true);
         match &result {
             Ok(_) => {
@@ -309,7 +320,8 @@ impl AntiAnalysisStage for AntiDebugging {
 pub struct VMDetection;
 impl AntiAnalysisStage for VMDetection {
     fn perform_anti_analysis(&self, ctx: &StageContext) -> Result<bool, FrameworkError> {
-        info!("[AntiAnalysis] VMDetection: Performing anti-analysis");
+        info!("[AntiAnalysis] VMDetection: Attempting VM detection");
+        // Placeholder
         let result = Ok(true);
         match &result {
             Ok(_) => {
@@ -325,7 +337,8 @@ impl AntiAnalysisStage for VMDetection {
 pub struct SandboxEvasion;
 impl AntiAnalysisStage for SandboxEvasion {
     fn perform_anti_analysis(&self, ctx: &StageContext) -> Result<bool, FrameworkError> {
-        info!("[AntiAnalysis] SandboxEvasion: Performing anti-analysis");
+        info!("[AntiAnalysis] SandboxEvasion: Attempting sandbox evasion");
+        // Placeholder
         let result = Ok(true);
         match &result {
             Ok(_) => {
