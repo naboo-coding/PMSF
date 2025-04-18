@@ -177,20 +177,20 @@ Issues, pull requests, and suggestions are welcome. Please follow standard Rust 
 
 ## Warning
 
-> **SECURITY WARNING:**
-> This framework is designed to simulate malware stages for research and education. However, because it is open source, it is possible for someone to modify the code to perform real malicious actions. **Always check the code before running it, especially if you received it from someone else.**
->
-> To verify the code is safe:
-> - Open `src/lib.rs`.
-> - Search for the following function names:
->     - `establish_persistence`
->     - `execute_code`
->     - `communicate_c2`
->     - `perform_anti_analysis`
-> - Inside each function, look for comments like `// Placeholder`.
-> - If you see only logging and `Ok(())` or `Ok(true)` being returned, it's safe.
-> - If you see real system calls, file operations, network connections, or anything that changes your system, that's a red flag.
->
+ **SECURITY WARNING:**
+ This framework is designed to simulate malware stages for research and education. However, because it is open source, it is possible for someone to modify the code to perform real malicious actions. **Always check the code before running it, especially if you received it from someone else.**
+
+ To verify the code is safe:
+ - Open `src/lib.rs`.
+ - Search for the following function names:
+     - `establish_persistence`
+     - `execute_code`
+     - `communicate_c2`
+     - `perform_anti_analysis`
+ - Inside each function, look for comments like `// Placeholder`.
+ - If you see only logging and `Ok(())` or `Ok(true)` being returned, it's safe.
+  - If you see real system calls, file operations, network connections, or anything that changes your system, that's a red flag.
+
 > **Never run code you do not trust or understand.**
 
 ---
