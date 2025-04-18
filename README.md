@@ -1,44 +1,23 @@
 # Polymorphic Malware Stage Framework (PMSF)
 
-> **DISCLAIMER:** This project is intended for educational and research purposes only. The author do not condone or support the use of this code for malicious or unauthorized activities. Use responsibly and in compliance with all applicable laws and regulations.
+> **DISCLAIMER:** This framework is a proof‑of‑concept for educational and research use only. The author does not condone or support malicious or unauthorized activities.
 
-> **A proof-of-concept Rust library for compile-time polymorphic malware stage selection using [rustmorphism](https://crates.io/crates/rustmorphism).**
-
-This library demonstrates how to use compile-time function polymorphism to generate unique malware binaries from a single codebase. Each build deterministically selects a different set of techniques for each malware stage (persistence, execution, C2, anti-analysis), making static signature-based detection much harder.
+A flexible Rust library for building polymorphic malware stage workflows, combining compile‑time and runtime techniques to maximize variability, configurability, and telemetry.
 
 ---
 
-## Table of Contents
+## Key Features
 
-- [Features](#features)
-- [Motivation](#motivation)
-- [Installation](#installation)
-- [Quick Start](#quick-start)
-- [Usage](#usage)
-  - [Stage Interfaces](#stage-interfaces)
-  - [Polymorphic Implementations](#polymorphic-implementations)
-- [How It Works](#how-it-works)
-- [Controlling Selection](#controlling-selection)
-- [FAQ](#faq)
-- [Contributing](#contributing)
-- [License](#license)
-- [Links](#links)
-
----
-
-## Features
-
-- **Multiple malware techniques:** Each stage (persistence, execution, C2, anti-analysis) has several implementations.
-- **Compile-time polymorphism:** One implementation per stage is selected at build time using `rustmorphism`.
-- **Unique binaries per build:** Each build can produce a different combination of techniques, hindering static analysis and signature-based detection.
-- **Zero runtime overhead:** Only the selected implementations are included in the final binary.
-- **Modular and extensible:** Easily add new techniques for any stage.
-
----
-
-## Motivation
-
-Traditional malware is often detected by static signatures. By using compile-time polymorphism, this framework demonstrates how a single codebase can generate many unique binaries, each with different embedded techniques. This approach is inspired by real-world polymorphic malware, but is intended for educational and research purposes only.
+- **Compile‑time polymorphism** via the `rustmorphism` crate (multiple binaries by build).
+- **Dynamic configuration** through a TOML file (`config.toml`) for explicit stage selection.
+- **Runtime registration** of custom techniques using a global registry and `register_*` functions.
+- **Structured error handling** with the `FrameworkError` enum for clearer diagnostics.
+- **Context propagation** with `StageContext`, carrying payloads and metadata between stages.
+- **Logging integration** using the `log` crate and `env_logger` for stage‑level events.
+- **Telemetry hooks** via the `TelemetryEvent` trait for research or simulation callbacks.
+- **Chaining utilities** (`run_*_chain`) to invoke multiple techniques in sequence, collecting errors.
+- **Selection helpers**: weighted random (`weighted_random_choice`) and conditional (environment/config) selection.
+- **Example/demo** under `examples/demo.rs` showing full usage.
 
 ---
 
@@ -48,125 +27,154 @@ Add this to your `Cargo.toml`:
 
 ```toml
 [dependencies]
-rustmorphism = "0.1.0"
+pmsf = "0.1.0"
 ```
 
-Clone or copy this repository to use the framework as a starting point for your own research.
+Then import in Rust:
+
+```rust
+use pmsf::*;
+```
 
 ---
 
 ## Quick Start
 
 ```rust
-use PMSF::{
-    establish_persistence_poly, perform_anti_analysis_poly, execute_code_poly, communicate_c2_poly
+use pmsf::{
+    establish_persistence_poly,
+    execute_code_poly,
+    communicate_c2_poly,
+    perform_anti_analysis_poly,
+    StageContext,
 };
 
 fn main() {
-    let persistence = establish_persistence_poly();
-    persistence.establish_persistence().unwrap();
+    // Default stage context (no payload, empty metadata)
+    let ctx = StageContext::default();
 
-    let anti_analysis = perform_anti_analysis_poly();
-    anti_analysis.perform_anti_analysis().unwrap();
+    // Compile‑time polymorphic selection
+    let p = establish_persistence_poly();
+    p.establish_persistence(&ctx).unwrap();
 
-    let execution = execute_code_poly();
-    execution.execute_code().unwrap();
+    let a = perform_anti_analysis_poly();
+    a.perform_anti_analysis(&ctx).unwrap();
 
-    let c2 = communicate_c2_poly();
-    c2.communicate_c2().unwrap();
+    let e = execute_code_poly();
+    e.execute_code(&ctx).unwrap();
+
+    let c = communicate_c2_poly();
+    c.communicate_c2(&ctx).unwrap();
 }
 ```
 
 ---
 
-## Usage
+## Configuration
 
-### Stage Interfaces
+Create a `config.toml` in your project root to override defaults or random selection:
 
-Each malware stage is defined as a Rust trait:
+```toml
+# Choose one technique per stage, or omit to fallback to random.
+persistence = "ScheduledTasks"
+execution  = "MappingInjection"
+c2         = "DNSTunneling"
+anti_analysis = "VMDetection"
+```
+
+Load it at runtime:
 
 ```rust
-pub trait PersistenceStage {
-    fn establish_persistence(&self) -> Result<(), String>;
-}
+let config = FrameworkConfig::from_file("config.toml");
+println!("Loaded config: {:?}", config);
+```
 
-pub trait ExecutionStage {
-    fn execute_code(&self) -> Result<(), String>;
-}
+---
 
-pub trait C2Stage {
-    fn communicate_c2(&self) -> Result<(), String>;
-}
+## Dynamic Registration
 
-pub trait AntiAnalysisStage {
-    fn perform_anti_analysis(&self) -> Result<(), String>;
+To add your own technique at runtime:
+
+```rust
+// Define and implement your stage trait
+struct MyTechnique;
+impl PersistenceStage for MyTechnique { /* ... */ }
+
+// Register it under a name
+register_persistence("MyTechnique", || Box::new(MyTechnique));
+
+// Later lookup by name (or fallback)
+if let Some(inst) = get_persistence_by_name("MyTechnique") {
+    inst.establish_persistence(&ctx)?;
 }
 ```
 
-### Polymorphic Implementations
+---
 
-For each stage, multiple techniques are implemented and wrapped in a `polymorphic_fn!` macro:
+## Logging & Telemetry
+
+Initialize logging and an optional telemetry callback:
 
 ```rust
-use rustmorphism::polymorphic_fn;
+use log::LevelFilter;
+use env_logger;
 
-// Example for persistence
-polymorphic_fn! {
-    pub fn establish_persistence_poly() -> Box<dyn PersistenceStage> {
-        { Box::new(RegistryRunKeys) },
-        { Box::new(ScheduledTasks) },
-        { Box::new(WMIEventSubscription) }
+env_logger::builder().filter_level(LevelFilter::Info).init();
+
+struct ConsoleTelemetry;
+impl TelemetryEvent for ConsoleTelemetry {
+    fn on_event(&self, stage: &str, tech: &str, status: &str) {
+        println!("Telemetry: {}::{}, {}", stage, tech, status);
     }
 }
+
+set_telemetry_callback(Box::new(ConsoleTelemetry));
 ```
 
-The same pattern is used for execution, C2, and anti-analysis stages.
+All stages will log `info!` and emit `on_event(...)` on success or `error!` on failure.
 
 ---
 
-## How It Works
+## Chaining Techniques
 
-The `polymorphic_fn!` macro from `rustmorphism` selects one implementation for each function at compile time, based on build metadata (such as build hash, environment, etc.). This means:
+Run multiple techniques in sequence and gather any errors:
 
-- Each build can select a different set of techniques for each stage.
-- Only the selected implementations are included in the binary.
-- Analysis of one sample reveals only the chosen set of techniques.
-
----
-
-## Controlling Selection
-
-You can influence which techniques are selected by:
-
-- Forcing a rebuild (e.g., `cargo clean` or changing a file).
-- Modifying the build script to change the build hash or environment variable.
-- Using different build environments or metadata.
+```rust
+let errs = run_persistence_chain(&["RegistryRunKeys", "ScheduledTasks"]);
+match errs {
+    Ok(_) => println!("All persistence steps succeeded."),
+    Err(e) => println!("Errors: {:?}", e),
+}
+```
 
 ---
 
-## FAQ
+## Helpers
 
-**Q: Is this real malware?**  
-A: No. This is a proof-of-concept for research and educational purposes only. All technique implementations are placeholders.
+- **Weighted random**: `weighted_random_choice(&[(&"A", 70), (&"B", 30)])`
+- **Conditional**: `select_technique_by_condition(&choices, "ENV_VAR")`
 
-**Q: Can I add my own techniques?**  
-A: Yes! Just implement the appropriate trait and add it to the relevant `polymorphic_fn!` macro.
+---
 
-**Q: Is there any runtime overhead?**  
-A: No. Only the selected implementation is compiled into the binary.
+## Examples
 
-**Q: How do I know which technique was selected?**  
-A: You can print the type name of the selected implementation using `std::any::type_name_of_val`.
+Build and run the comprehensive demo:
+
+```bash
+cargo run --example demo
+```
+
+This example demonstrates config loading, registration, logging, telemetry, and chaining.
 
 ---
 
 ## Contributing
 
-Contributions, issues, and feature requests are welcome! Feel free to open an issue or submit a pull request.
+Issues, pull requests, and suggestions are welcome. Please follow standard Rust project conventions.
 
 ---
 
 ## License
 
-This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
+The MIT License — see [LICENSE](LICENSE) for details.
 
