@@ -1,5 +1,7 @@
 # Polymorphic Malware Stage Framework (PMSF)
 
+> **DISCLAIMER:** This project is intended for educational and research purposes only. The author do not condone or support the use of this code for malicious or unauthorized activities. Use responsibly and in compliance with all applicable laws and regulations.
+
 > **A proof-of-concept Rust library for compile-time polymorphic malware stage selection using [rustmorphism](https://crates.io/crates/rustmorphism).**
 
 This library demonstrates how to use compile-time function polymorphism to generate unique malware binaries from a single codebase. Each build deterministically selects a different set of techniques for each malware stage (persistence, execution, C2, anti-analysis), making static signature-based detection much harder.
@@ -56,7 +58,7 @@ Clone or copy this repository to use the framework as a starting point for your 
 ## Quick Start
 
 ```rust
-use PMSFlib::{
+use PMSF::{
     establish_persistence_poly, perform_anti_analysis_poly, execute_code_poly, communicate_c2_poly
 };
 
@@ -167,7 +169,4 @@ Contributions, issues, and feature requests are welcome! Feel free to open an is
 ## License
 
 This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
-
-
-</rewritten_file>
 
