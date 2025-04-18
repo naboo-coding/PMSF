@@ -1,10 +1,16 @@
 [package]
-name = "PMSF"
+name = "pmsf"
 version = "0.1.0"
-edition = "2024"
+edition = "2021"
 
 [dependencies]
 rustmorphism = "0.1.0"
+serde = { version = "1.0", features = ["derive"] }
+toml = "0.7"
+log = "0.4"
+env_logger = "0.10"
+rand = "0.8"
+once_cell = "1.18"
 
 [build-dependencies]
 chrono = "0.4"
