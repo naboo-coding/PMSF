@@ -1,0 +1,11 @@
+[package]
+name = "PMSF"
+version = "0.1.0"
+edition = "2024"
+
+[dependencies]
+rustmorphism = "0.1.0"
+
+[build-dependencies]
+chrono = "0.4"
+rand = "0.8"
