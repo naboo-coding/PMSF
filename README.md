@@ -7,6 +7,16 @@ PMSF is a research and educational Rust framework for simulating the modular sta
 
 ---
 
+## Why is PMSF Useful?
+
+- **Safe Malware Simulation:** PMSF allows users to study and simulate malware stages in a controlled, non-destructive environment. All real actions are stubbed out, ensuring safety for research and education.
+- **Educational Value:** The framework is designed for students and educators to understand the inner workings of malware staging, evasion, and modularity without risk.
+- **Research Utility:** PMSF provides a flexible platform for researchers to experiment with and analyze different malware techniques, configurations, and evasion strategies.
+- **Modularity & Extensibility:** Its stage-based, pluggable architecture makes it easy to add, modify, or chain new techniques, supporting a wide range of experiments and demonstrations.
+- **Configurable & Observable:** With dynamic configuration and integrated logging/telemetry, users can customize scenarios and observe detailed stage-level events for deeper insight.
+
+---
+
 ## Key Features
 
 - **Compile‑time polymorphism** via the `rustmorphism` crate (multiple binaries by build).
