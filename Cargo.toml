@@ -2,6 +2,8 @@
 name = "pmsf"
 version = "0.1.0"
 edition = "2021"
+license = "MIT"
+description = "Polymorphic Malware Stage Framework (PMSF): a research-grade Rust framework for simulating and analyzing modular malware stages."
 
 [dependencies]
 rustmorphism = "0.1.0"
