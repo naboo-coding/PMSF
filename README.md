@@ -1,8 +1,53 @@
 # Polymorphic Malware Stage Framework (PMSF)
 
-> **DISCLAIMER:** This framework is a proof‑of‑concept for educational and research use only. The author does not condone or support malicious or unauthorized activities.
+<p align="left">
+  <a href="https://crates.io/crates/pmsf"><img src="https://img.shields.io/crates/v/pmsf.svg?style=flat-square" alt="Crates.io"></a>
+  <a href="https://docs.rs/pmsf"><img src="https://img.shields.io/docsrs/pmsf?style=flat-square" alt="docs.rs"></a>
+  <a href="LICENSE"><img src="https://img.shields.io/badge/license-MIT-blue.svg?style=flat-square" alt="License"></a>
+</p>
+
+> **⚠️ DISCLAIMER:**
+> This framework is a proof‑of‑concept for educational and research use only. The author does not condone or support malicious or unauthorized activities.
 
 PMSF is a robust, research-grade Rust framework engineered for the simulation and analysis of modular malware stages. Designed with a focus on safety, extensibility, and clarity, PMSF empowers security researchers, educators, and students to explore advanced malware staging, evasion, and polymorphism techniques in a controlled, observable environment. All real-world actions are stubbed by default, ensuring a safe and risk-free experience for experimentation and learning.
+
+---
+
+## ⚠️ Security Warning
+
+> **This framework is designed solely for safe simulation of malware stages in research and educational contexts.**
+>
+> Because PMSF is open source, it is possible for someone to modify the code to perform real malicious actions. **Always review the code before running it, especially if you received it from an untrusted source.**
+>
+> To verify the code is safe:
+> - Open `src/lib.rs`.
+> - Search for the following function names:
+>     - `establish_persistence`
+>     - `execute_code`
+>     - `communicate_c2`
+>     - `perform_anti_analysis`
+> - Inside each function, look for comments like `// Placeholder`.
+> - If you see only logging and `Ok(())` or `Ok(true)` being returned, it's safe.
+> - If you see real system calls, file operations, network connections, or anything that changes your system, that's a red flag.
+>
+> **Never run code you do not trust or understand.**
+
+---
+
+## Table of Contents
+
+- [Why Choose PMSF?](#why-choose-pmsf)
+- [Key Features](#key-features)
+- [Installation](#installation)
+- [Quick Start](#quick-start)
+- [Configuration](#configuration)
+- [Dynamic Registration](#dynamic-registration)
+- [Logging & Telemetry](#logging--telemetry)
+- [Chaining Techniques](#chaining-techniques)
+- [Helpers](#helpers)
+- [Examples](#examples)
+- [Contributing](#contributing)
+- [License](#license)
 
 ---
 
@@ -193,26 +238,6 @@ This example demonstrates config loading, registration, logging, telemetry, and 
 ## Contributing
 
 Issues, pull requests, and suggestions are welcome. Please follow standard Rust project conventions.
-
----
-
-## Warning
-
- **SECURITY WARNING:**
- This framework is designed to simulate malware stages for research and education. However, because it is open source, it is possible for someone to modify the code to perform real malicious actions. **Always check the code before running it, especially if you received it from someone else.**
-
- To verify the code is safe:
- - Open `src/lib.rs`.
- - Search for the following function names:
-     - `establish_persistence`
-     - `execute_code`
-     - `communicate_c2`
-     - `perform_anti_analysis`
- - Inside each function, look for comments like `// Placeholder`.
- - If you see only logging and `Ok(())` or `Ok(true)` being returned, it's safe.
-  - If you see real system calls, file operations, network connections, or anything that changes your system, that's a red flag.
-
-> **Never run code you do not trust or understand.**
 
 ---
 
