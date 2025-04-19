@@ -2,33 +2,32 @@
 
 > **DISCLAIMER:** This framework is a proof‑of‑concept for educational and research use only. The author does not condone or support malicious or unauthorized activities.
 
-
-PMSF is a research and educational Rust framework for simulating the modular stages of malware, with a focus on polymorphism, configurability, and extensibility. It is safe by default, with all real actions stubbed out, and is designed to help researchers and students understand malware staging and evasion techniques in a controlled, observable way.
+PMSF is a robust, research-grade Rust framework engineered for the simulation and analysis of modular malware stages. Designed with a focus on safety, extensibility, and clarity, PMSF empowers security researchers, educators, and students to explore advanced malware staging, evasion, and polymorphism techniques in a controlled, observable environment. All real-world actions are stubbed by default, ensuring a safe and risk-free experience for experimentation and learning.
 
 ---
 
-## Why is PMSF Useful?
+## Why Choose PMSF?
 
-- **Safe Malware Simulation:** PMSF allows users to study and simulate malware stages in a controlled, non-destructive environment. All real actions are stubbed out, ensuring safety for research and education.
-- **Educational Value:** The framework is designed for students and educators to understand the inner workings of malware staging, evasion, and modularity without risk.
-- **Research Utility:** PMSF provides a flexible platform for researchers to experiment with and analyze different malware techniques, configurations, and evasion strategies.
-- **Modularity & Extensibility:** Its stage-based, pluggable architecture makes it easy to add, modify, or chain new techniques, supporting a wide range of experiments and demonstrations.
-- **Configurable & Observable:** With dynamic configuration and integrated logging/telemetry, users can customize scenarios and observe detailed stage-level events for deeper insight.
+- **Purpose-Built for Security Research & Education:** PMSF is tailored for security professionals, educators, and students seeking a safe, hands-on environment to study and demonstrate malware staging and evasion techniques.
+- **Risk-Free Simulation:** All operational stages are fully stubbed, guaranteeing a non-destructive, controlled experience ideal for experimentation and curriculum development.
+- **Modular & Extensible Architecture:** Easily add, modify, or chain new techniques with a stage-based, pluggable design—enabling rapid prototyping and comparative analysis.
+- **Comprehensive Observability:** Integrated logging and telemetry provide deep visibility into stage-level events, supporting detailed analysis and reporting.
+- **Configurable & Reproducible:** Dynamic configuration and deterministic selection mechanisms allow for precise scenario customization and repeatable experiments.
 
 ---
 
 ## Key Features
 
-- **Compile‑time polymorphism** via the `rustmorphism` crate (multiple binaries by build).
-- **Dynamic configuration** through a TOML file (`config.toml`) for explicit stage selection.
-- **Runtime registration** of custom techniques using a global registry and `register_*` functions.
-- **Structured error handling** with the `FrameworkError` enum for clearer diagnostics.
-- **Context propagation** with `StageContext`, carrying payloads and metadata between stages.
-- **Logging integration** using the `log` crate and `env_logger` for stage‑level events.
-- **Telemetry hooks** via the `TelemetryEvent` trait for research or simulation callbacks.
-- **Chaining utilities** (`run_*_chain`) to invoke multiple techniques in sequence, collecting errors.
-- **Selection helpers**: weighted random (`weighted_random_choice`) and conditional (environment/config) selection.
-- **Example/demo** under `examples/demo.rs` showing full usage.
+- **Compile-Time Polymorphism:** Leverage the `rustmorphism` crate to generate multiple binaries at build time, enabling diverse technique selection.
+- **Dynamic Configuration:** Select and orchestrate stages explicitly via a TOML configuration file (`config.toml`).
+- **Runtime Extensibility:** Register custom techniques on the fly using a global registry and intuitive `register_*` functions.
+- **Structured Error Handling:** Diagnose issues efficiently with the comprehensive `FrameworkError` enum.
+- **Context Propagation:** Seamlessly transfer payloads and metadata between stages using the `StageContext` abstraction.
+- **Integrated Logging:** Monitor stage-level events in real time with the `log` crate and `env_logger` integration.
+- **Telemetry Hooks:** Instrument research and simulation workflows with the `TelemetryEvent` trait for custom callbacks.
+- **Chaining Utilities:** Execute multiple techniques in sequence with `run_*_chain`, aggregating results and errors.
+- **Advanced Selection Helpers:** Employ weighted random (`weighted_random_choice`) and conditional (environment/config) selection utilities for flexible technique orchestration.
+- **Comprehensive Example:** Explore a full-featured demonstration in `examples/demo.rs` showcasing all major capabilities.
 
 ---
 
@@ -61,21 +60,24 @@ use pmsf::{
 };
 
 fn main() {
-    // Default stage context (no payload, empty metadata)
+    // Initialize a default stage context (no payload, empty metadata)
     let ctx = StageContext::default();
 
-    // Compile‑time polymorphic selection
-    let p = establish_persistence_poly();
-    p.establish_persistence(&ctx).unwrap();
+    // Select and execute the persistence stage
+    let persistence = establish_persistence_poly();
+    persistence.establish_persistence(&ctx).expect("Persistence stage failed");
 
-    let a = perform_anti_analysis_poly();
-    a.perform_anti_analysis(&ctx).unwrap();
+    // Select and execute the anti-analysis stage
+    let anti_analysis = perform_anti_analysis_poly();
+    anti_analysis.perform_anti_analysis(&ctx).expect("Anti-analysis stage failed");
 
-    let e = execute_code_poly();
-    e.execute_code(&ctx).unwrap();
+    // Select and execute the code execution stage
+    let execution = execute_code_poly();
+    execution.execute_code(&ctx).expect("Execution stage failed");
 
-    let c = communicate_c2_poly();
-    c.communicate_c2(&ctx).unwrap();
+    // Select and execute the C2 communication stage
+    let c2 = communicate_c2_poly();
+    c2.communicate_c2(&ctx).expect("C2 stage failed");
 }
 ```
 
@@ -83,17 +85,18 @@ fn main() {
 
 ## Configuration
 
-Create a `config.toml` in your project root to override defaults or random selection:
+To customize stage selection, create a `config.toml` file in your project root. This allows you to explicitly specify which technique to use for each stage, or omit entries to enable random selection.
 
 ```toml
-# Choose one technique per stage, or omit to fallback to random.
+# config.toml
+# Specify one technique per stage, or omit to use random selection.
 persistence = "ScheduledTasks"
 execution  = "MappingInjection"
 c2         = "DNSTunneling"
 anti_analysis = "VMDetection"
 ```
 
-Load it at runtime:
+Load the configuration at runtime:
 
 ```rust
 let config = FrameworkConfig::from_file("config.toml");
@@ -104,17 +107,17 @@ println!("Loaded config: {:?}", config);
 
 ## Dynamic Registration
 
-To add your own technique at runtime:
+You can register your own custom technique at runtime, enabling rapid prototyping and extension:
 
 ```rust
 // Define and implement your stage trait
 struct MyTechnique;
 impl PersistenceStage for MyTechnique { /* ... */ }
 
-// Register it under a name
+// Register it under a unique name
 register_persistence("MyTechnique", || Box::new(MyTechnique));
 
-// Later lookup by name (or fallback)
+// Retrieve and use the registered technique by name
 if let Some(inst) = get_persistence_by_name("MyTechnique") {
     inst.establish_persistence(&ctx)?;
 }
@@ -124,7 +127,7 @@ if let Some(inst) = get_persistence_by_name("MyTechnique") {
 
 ## Logging & Telemetry
 
-Initialize logging and an optional telemetry callback:
+PMSF supports integrated logging and custom telemetry callbacks for enhanced observability:
 
 ```rust
 use log::LevelFilter;
@@ -142,13 +145,13 @@ impl TelemetryEvent for ConsoleTelemetry {
 set_telemetry_callback(Box::new(ConsoleTelemetry));
 ```
 
-All stages will log `info!` and emit `on_event(...)` on success or `error!` on failure.
+All stages emit `info!` logs and trigger `on_event(...)` on success, or `error!` on failure.
 
 ---
 
 ## Chaining Techniques
 
-Run multiple techniques in sequence and gather any errors:
+You can execute multiple techniques in sequence and collect any errors for robust, multi-step simulations:
 
 ```rust
 let errs = run_persistence_chain(&["RegistryRunKeys", "ScheduledTasks"]);
@@ -162,8 +165,16 @@ match errs {
 
 ## Helpers
 
-- **Weighted random**: `weighted_random_choice(&[(&"A", 70), (&"B", 30)])`
-- **Conditional**: `select_technique_by_condition(&choices, "ENV_VAR")`
+PMSF provides utility functions for advanced technique selection:
+
+- **Weighted random selection:**
+  ```rust
+  weighted_random_choice(&[("A", 70), ("B", 30)])
+  ```
+- **Conditional selection based on environment/config:**
+  ```rust
+  select_technique_by_condition(&choices, "ENV_VAR")
+  ```
 
 ---
 
